@@ -1,0 +1,173 @@
+
+<script src="fns.js">
+</script>
+<script>
+
+function Person(name, dob, image)
+{
+	this.name = name;
+	this.dob = new Date(dob);
+	this.image = image;
+}
+
+var aPerson = new Array();
+
+function addPerson()
+{
+   var name = document.getElementById("idName");
+   var dOb = document.getElementById("idDob");
+   var image = document.getElementById("idImage");
+
+   var p = new Person(name.value, dOb.value, image.value);
+   aPerson[aPerson.length] = p;
+
+   name.value  = "";
+   dOb.value = "";
+   image.value = "";
+}
+
+function addOnLoad(newLoadFn) {
+  var oldLoadFn = window.onload;
+  window.onload=function() {
+    if (oldLoadFn != null)
+      oldLoadFn();
+    newLoadFn();
+  }
+}
+
+function tableBegin() {
+    document.write("<table border=2>");
+}
+function tableEnd() {
+    document.write("</table>");
+}
+function tableRowBegin() {
+    document.write("<tr>");
+}
+function tableRowEnd() {
+    document.write("</tr>");
+}
+function tableHeadBegin() {
+    document.write("<th>");
+}
+function tableHeadEnd() {
+    document.write("</th>");
+}
+function tableCellBegin() {
+    document.write("<td>");
+}
+function tableCellEnd() {
+    document.write("</td>");
+}
+
+function daysToXmas(currDay) {
+    var xmas = getXmasDay();
+    var today = new Date();
+    var daystoXmas = (xmas - today);
+    daystoXmas /= (1000*60*60*24);
+    return daystoXmas;
+}
+
+function getXmasDay() {
+    xmasday = new Date();
+    xmasday.setMonth(11);
+    xmasday.setDate(25);
+    return xmasday;
+}
+
+function dayText(day) {
+   var days = new Array("Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat");
+   return days[day];
+}
+function showDaysLeft(future) {
+  var today = new Date();
+  var diff = Math.ceil((future-today) / (1000 * 60 * 60 * 24));;
+  document.write(diff);
+}
+function showTimeLeft(future) {
+  var today = new Date();
+  var diffInMs = future - today;
+  var diffInSeconds = Math.floor(diffInMs/1000);
+  var diffInMinutes = Math.floor(diffInSeconds/60);
+  var diffInHours = Math.floor(diffInMinutes/60);
+  var diffInDays = Math.floor(diffInHours/24);
+  var remHours = diffInHours%24;
+  var remMins = diffInMinutes%60;
+  var remSecs = diffInSeconds%60;
+  var str = "";
+  if (diffInDays > 0)
+    str = str + diffInDays + " days, ";
+  if (remHours > 0)
+    str = str + remHours + " hours, ";
+  if (remMins > 0)
+    str = str + remMins + " minutes, ";
+  if (remSecs > 0)
+    str = str + remSecs + " seconds, ";
+  return str;
+}
+
+function showAll ()
+{
+
+	tableBegin();
+
+	tableRowBegin();
+
+	tableHeadBegin();
+	  document.write("Name");
+	tableHeadEnd();
+
+	tableHeadBegin();
+	  document.write("Days Til Death");
+	tableHeadEnd();
+
+	tableHeadBegin();
+	  document.write("Image");
+	tableHeadEnd();
+
+	tableRowEnd();
+
+	for (var i = 0; i < aPerson.length; i++)
+	{
+		tableRowBegin();
+
+		tableCellBegin();
+		document.write(aPerson[i].name);
+		tableCellEnd();
+
+		tableCellBegin();
+		document.write(showTimeLeft(aPerson[i].dob));
+		tableCellEnd();
+
+
+        tableCellBegin();
+		document.write("<img src=" + aPerson[i].image + '.jpg width="100" height="100">');
+		tableCellEnd();
+
+
+		tableRowEnd();
+	}
+
+	tableEnd();
+}
+
+</script>
+
+
+<form name="basicform">
+
+   Name:<br>
+   <input type=text name="name" id="idName"></input><br>
+
+   The Day you Die(mm dd yyyy):<br>
+   <input type=text name="dOb" id="idDob"></input><br>
+
+   Image:<br>
+   <input type=text name="image" id="idImage"></input><br>
+
+   <input type="button" style="width:300px" name="addbtn"
+   	onclick="addPerson()" value="Add"></input><br>
+
+   <input type="button" style="width:300px" name="addbtn"
+   	onclick="showAll()" value="Show All"></input><br>
+</form>

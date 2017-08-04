@@ -1,0 +1,127 @@
+<html>
+ <body>
+ <h1>Racing Cars!</h1>
+ <div>
+    Model: <input type="text" id="idModel">
+    Colour: <input type="text" id="idColor">
+	Start Distance: <input type="text" id="idDist"><br>
+    <input type="button" id="addBtnId" value="Add To Table" onclick="addToTable()">
+	<input type="button" id="strtBtnId" value="Start Game" onclick="timer()"></input><br>
+  </div>
+	<div>
+	<br>
+    <table border="2">
+      <thead style="background:white">
+	   <tr>
+        <th>Model</th><th>Color</th><th>Distance</th>
+	   </tr>
+      </thead>
+      <tbody id="idTblBody">
+      </tbody>
+    </table>
+  </div>
+  <div>
+  <br>
+	Winner: <input type="text" id="idWin">
+  </div>
+  </body>
+</html>
+
+<script>
+//Global Variables
+var strROW_ID_PREFIX = "row_";
+var aCar = new Array();
+
+function Car(model, color, dist) //Car Object 
+{
+	this.model = model;
+	this.color = color;
+	this.dist = dist;
+} 
+function addToTable()//Adding the Cars to the Array & to the Table 
+{
+	var model = document.getElementById("idModel");
+	var color = document.getElementById("idColor");
+	var dist = document.getElementById("idDist");
+	
+	var c = new Car(model.value, color.value, dist.value);
+	aCar[aCar.length] = c;
+	createRow(aCar.length - 1);
+	
+	model.value  = "";
+	color.value  = "";
+	dist.value  = ""; 
+}
+function startGame()
+{
+	
+}
+function formRowId(i) //row_(id)
+{
+  return strROW_ID_PREFIX + i;
+}
+function createRow(i) //creates the rows for the table
+{
+   var tr = document.createElement("TR"); //creates the row
+   tr.id = formRowId(i); //creates the id
+   createTextCell(tr, aCar[i].model); //the cells
+   createTextCell(tr, aCar[i].color);
+   createTextCell(tr, aCar[i].dist);
+   getTblBody().appendChild(tr);// creates the link between tr and tablebody
+}
+function createCell(tr, leaf) //creates the cells used in each row
+{
+  var td = document.createElement("TD");
+  td.appendChild(leaf);
+  tr.appendChild(td);
+  return td;
+}
+function createTextCell(tr, str) //the node for the cell
+{
+  var tn = document.createTextNode(str);
+  return createCell(tr, tn);
+}
+function getTblBody()//gets the table id for appending the nodes
+{
+  return document.getElementById("idTblBody");
+}
+function replaceTextValueInTD(td, str) //replaces the distance when needed
+{
+  td.childNodes[0].nodeValue = str;
+}
+function adjustForEnd(tr, i) //changes the background to gold if won car has won race, 
+{
+  if (aCar[i].dist >= 1000)
+    tr.style.background = "#FFFF00";
+}
+function randomInt(min, max) //good code for a random ints
+{
+	var r = Math.random();
+	return Math.floor(r*(max-min+1) + min);
+}
+function timer() //randomly generates a row_Id, increases the distance & repeats until a distance = 1000, called when player hits start button
+ {
+	var btnStrt = document.getElementById("strtBtnId");
+	var addBtn = document.getElementById("addBtnId");
+	btnStrt.disabled  = true;
+	addBtn.disabled = true;
+	
+	var r = randomInt(0,aCar.length - 1);//gets a random number
+	var randomId = formRowId(r);//adds the "row_" prefix
+    var tr = document.getElementById(randomId);//sets it as the tr id
+	var td = tr.childNodes[2];//switches to the distance section in the tr
+	var rDist = randomInt(4, 6);
+	
+    adjustForEnd(tr, r);
+	if(aCar[r].dist >= 1000){
+     replaceTextValueInTD(td, "Winner");//replaces the value in the field
+	 }
+	 //Add the Car to the Winner box below table
+	else
+	{
+	 replaceTextValueInTD(td, aCar[r].dist);
+	 aCar[r].dist += rDist;//increases the distance
+	 setTimeout("timer()", 200);
+	 }
+ }
+</script>

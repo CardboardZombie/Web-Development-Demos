@@ -1,0 +1,132 @@
+<script>
+function Photo(desc, dateTaken, genre, image, url)
+{
+	this.desc = desc;
+	this.dateTaken = new Date(dateTaken);
+	this.genre = genre;
+	this.image = image;
+	this.url = url;
+}
+var aPhoto = new Array();
+
+function addPhoto()
+{
+   var desc = document.getElementById("idDesc");
+   var dateTaken = document.getElementById("idDateTaken");
+   var genre = document.getElementById("idGenre");
+   var image = document.getElementById("idImage");
+   var url = document.getElementById("idURL");
+
+   var p = new Photo(desc.value, dateTaken.value, genre.value, image.value, url.value);
+   aPhoto[aPhoto.length] = p;
+
+   desc.value  = "";
+   dateTaken.value = "";
+   genre.value = "";
+   image.value = "";
+   url.value = "";
+}
+
+function tableBegin() {
+    document.write("<table border=2>");
+}
+function tableEnd() {
+    document.write("</table>");
+}
+function tableRowBegin() {
+    document.write("<tr>");
+}
+function tableRowEnd() {
+    document.write("</tr>");
+}
+function tableHeadBegin() {
+    document.write("<th>");
+}
+function tableHeadEnd() {
+    document.write("</th>");
+}
+function tableCellBegin() {
+    document.write("<td>");
+}
+function tableCellEnd() {
+    document.write("</td>");
+}
+
+function showTable()
+{
+	document.write("<h1>You Are Sharing 2 Photos</h1>");
+	tableBegin();
+
+	tableRowBegin();
+
+	tableHeadBegin();
+	  document.write("Photo");
+	tableHeadEnd();
+
+	tableHeadBegin();
+	  document.write("Description");
+	tableHeadEnd();
+
+	tableHeadBegin();
+	  document.write("When Taken");
+	tableHeadEnd();
+
+	tableHeadBegin();
+	  document.write("Genre");
+	tableHeadEnd();
+
+	tableRowEnd();
+
+	for (var i = 0; i < aPhoto.length; i++)
+	{
+		tableRowBegin();
+
+		tableCellBegin();
+			document.write("<img src=" + aPhoto[i].image + ' width="100" height="100">');
+		tableCellEnd();
+
+		tableCellBegin();
+			document.write("<a href= http://" + aPhoto[i].url+">" + aPhoto[i].desc +"</a>");
+		tableCellEnd();
+
+        tableCellBegin();
+			document.write(aPhoto[i].dateTaken.toLocaleDateString());
+		tableCellEnd();
+
+		tableCellBegin();
+		 	document.write(aPhoto[i].genre);
+		tableCellEnd();
+
+		tableRowEnd();
+	}
+
+	tableEnd();
+}
+
+</script>
+
+<form name="basicform">
+
+<th>Add A Picture to the Photo Sharing Website</th><br>
+
+   Description:
+   <input type=text name="desc" id="idDesc"></input><br>
+
+   Date Taken(mm dd yyyy HH:MM):
+   <input type=text name="dateTaken" id="idDateTaken"></input>
+
+   Genre:
+   <input type=text name="genre" id="idGenre"></input><br>
+
+   Image File Name:
+   <input type=text name="image" id="idImage"></input><br>
+
+   URL for More Details:
+   <input type=text name="url" id="idURL"></input><br>
+
+   <input type="button" style="width:300px" name="addbtn"
+   	onclick="addPhoto()" value="Add Photo"></input><br>
+
+   <input type="button" style="width:300px" name="addbtn"
+   	onclick="showTable()" value="Show All"></input><br>
+</form>

@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Test</title>
+<script> 
+//Demonstrates innerHTML>>its good but its not standardised so any day it could become outdated
+var newCount;
+function timer(position,count)
+ {
+  if (position == 'start') {
+   document.getElementById("timer").innerHTML=count
+   newCount = count - 1
+   setTimeout("timer('go',newCount)",1000)
+  }
+  
+  if (position == 'go') {
+   document.getElementById("timer").innerHTML=count
+   newCount--;
+   if (newCount >= 0) {
+   setTimeout("timer('go',newCount)",1000)
+   }
+  }
+ }
+</script>
+</head>
+<body onload="timer('start',10);">
+<div id="timer" />
+</body>
+</html>

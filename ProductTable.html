@@ -1,0 +1,128 @@
+<html>
+ <body onload= "addProducts();">
+	<div>
+    <table border="2">
+      <thead style="background:lightgrey">
+	   <tr>
+        <th>Name</th><th>Price: €</th><th>Quantity</th>
+	   </tr>
+      </thead>
+      <tbody id="idTblBody">
+      </tbody>
+    </table>
+  </div>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+//Global Variables
+var strROW_ID_PREFIX = "row_";
+var aProduct = new Array(
+  new Product("1 TB Desktop Hard Drive", "89.95", 12),
+  new Product("LED Torch", "7.35", 16),
+  new Product("Blu-Ray Player", "109.95", 10),
+  new Product("AA Battery Pack", "5.15", 20),
+  new Product("LaFerrari RC Car", "43.95", 15),
+  new Product("CD R 50Pk", "12.95", 2)  
+  );
+function Product(name, price, quant) //Product Object 
+{
+	this.name = name;
+	this.price = price;
+	this.quant = quant;
+} 
+function addProducts() //Adding the Hardcoded Products from the Array to the Table
+{
+ for(i =0; i < aProduct.length; i++)
+	{
+		createRow(i);
+	}
+	timer(); //Starts the Selling Timer once they have been added
+}
+function formRowId(i) //row_(id)
+{
+  return strROW_ID_PREFIX + i;
+}
+function createRow(i) //creates the rows for the table
+{
+   var tr = document.createElement("TR"); //creates the row
+   tr.id = formRowId(i); //creates the id
+   createTextCell(tr, aProduct[i].name); //the cells
+   createTextCell(tr, aProduct[i].price);
+   createTextCell(tr, aProduct[i].quant);
+   getTblBody().appendChild(tr);// creates the link between tr and tablebody
+}
+function createCell(tr, leaf) //creates the cells used in each row
+{
+  var td = document.createElement("TD");
+  td.appendChild(leaf);
+  tr.appendChild(td);
+  return td;
+}
+function createTextCell(tr, str) //the node for the cell
+{
+  var tn = document.createTextNode(str);
+  return createCell(tr, tn);
+}
+function getTblBody()//gets the table id for appending the nodes
+{
+  return document.getElementById("idTblBody");
+}
+function replaceTextValueInTD(td, str) //replaces the quantity when needed
+{
+  td.childNodes[0].nodeValue = str;
+}
+function adjustForLow(tr, i) //changes the background to red if low, grey if sold out
+{
+  if (aProduct[i].quant == 1)
+    tr.style.background = "#ff0000";
+  else if (aProduct[i].quant == 0)
+	tr.style.background = "#A9A9A9";
+	
+}
+function randomInt(min, max) //good code for a random ints
+{
+	var r = Math.random();
+	return Math.floor(r*(max-min+1) + min);
+}
+function timer() //randomly generates a row_Id, decrements the quantity & repeats until all quantities are = 0
+ {
+	var r = randomInt(0,aProduct.length - 1);//gets a random number
+	var randomId = formRowId(r);//adds the "row_" prefix
+    var tr = document.getElementById(randomId);//sets it as the tr id
+	var td = tr.childNodes[2];//switches to the quantity section in the tr
+    if(aProduct[r].quant != 0)
+	 aProduct[r].quant--;//decrements the quantity
+	 
+    adjustForLow(tr, r);
+	if(aProduct[r].quant == 0)
+     replaceTextValueInTD(td, "Sold Out");//replaces the value in the field
+	else
+	 replaceTextValueInTD(td, aProduct[r].quant);
+    var empty = keepGoing();//gets the boolean to check if the timer should repeat
+    if(empty == false)
+     setTimeout("timer()", 1000);
+ }
+ function keepGoing() //Checks if all the Products have sold out, if not the timer keeps going
+ {
+	for(i = 0; i < aProduct.length; i++)
+	{
+		if(aProduct[i].quant > 0)
+		return false;
+	}
+	return true;
+ }
+</script>
